@@ -20,8 +20,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import com.covoiturage.position.PositionConducteur;
-import com.covoiturage.position.PositionConducteurRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,15 +31,12 @@ public class DemandeService {
     /** Duree de validite d'une demande avant expiration automatique. */
     private static final long EXPIRATION_MINUTES = 5;
 
-    private static final double RAYON_METRES = 4000;
-
     private final DemandeRepository demandes;
     private final UtilisateurRepository utilisateurs;
     private final PointDeRencontreRepository points;
     private final VehiculeRepository vehicules;
     private final TrajetRepository trajets;
     private final NotificationService notifications;
-    private final PositionConducteurRepository positions;
 
     @Transactional
     public DemandeResponse creer(Long passagerId, DemandeRequest req) {
@@ -61,8 +56,8 @@ public class DemandeService {
         d.setDateExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
         demandes.save(d);
 
-        // Push temps reel vers les conducteurs proches.
-        notifications.notifierConducteursProches(d);
+        // Push temps reel vers tous les conducteurs, sans filtre de distance.
+        notifications.notifierTousLesConducteurs(d);
 
         return DemandeResponse.from(d);
     }
@@ -77,20 +72,14 @@ public class DemandeService {
                 .toList();
     }
 
-    /**
-     * Demandes en attente PROCHES de la position du conducteur (vide s'il est hors
-     * ligne).
-     */
+   
     @Transactional(readOnly = true)
     public List<DemandeResponse> enAttente(Long conducteurId) {
-        return positions.findByConducteurId(conducteurId)
-                .filter(PositionConducteur::isDisponible)
-                .map(pos -> demandes
-                        .trouverDemandesProches(conducteurId, pos.getLatitude(), pos.getLongitude(), RAYON_METRES)
-                        .stream()
-                        .map(DemandeResponse::from)
-                        .toList())
-                .orElseGet(List::of);
+        return demandes
+                .findByStatutAndPassagerIdNotOrderByDateCreationDesc(StatutDemande.EN_ATTENTE, conducteurId)
+                .stream()
+                .map(DemandeResponse::from)
+                .toList();
     }
 
     @Transactional
@@ -107,10 +96,9 @@ public class DemandeService {
 
     /**
      * Acceptation par un conducteur. Cree un trajet OUVERT (ou rattache a un trajet
-     * existant
-     * pour le covoiturage partage), puis valide la transition EN_ATTENTE ->
-     * ACCEPTEE de maniere
-     * atomique grace au verrou optimiste (@Version).
+     * existant pour le covoiturage partage), puis valide la transition EN_ATTENTE
+     * ->
+     * ACCEPTEE de maniere atomique grace au verrou optimiste (@Version).
      */
     @Transactional
     public DemandeResponse accepter(Long conducteurId, Long demandeId, AccepterRequest req) {
@@ -129,7 +117,6 @@ public class DemandeService {
 
         Trajet trajet = resoudreTrajet(conducteurId, vehicule, d, req.trajetId());
 
-        // Verification des places disponibles.
         long dejaPrises = trajet.getId() != null
                 ? demandes.placesOccupees(trajet.getId(), StatutDemande.ANNULEE)
                 : 0;
@@ -137,8 +124,6 @@ public class DemandeService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Plus assez de places dans le vehicule");
         }
 
-        // Transition atomique : si deux conducteurs acceptent en meme temps,
-        // le second declenche une OptimisticLockingFailureException au flush.
         d.setStatut(StatutDemande.ACCEPTEE);
         d.setTrajet(trajet);
         d.setPrix(req.prix());

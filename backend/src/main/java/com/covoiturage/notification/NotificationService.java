@@ -3,7 +3,7 @@ package com.covoiturage.notification;
 import com.covoiturage.demande.DemandeCovoiturage;
 import com.covoiturage.demande.dto.DemandeResponse;
 import com.covoiturage.notification.dto.NotificationResponse;
-import com.covoiturage.position.PositionConducteurRepository;
+import com.covoiturage.user.Utilisateur;
 import com.covoiturage.user.UtilisateurRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Gere le temps reel (push WebSocket) et les notifications persistees.
- * - conducteurs proches : nouvelles demandes
+ * - conducteurs : nouvelles demandes, sans filtre de distance
  * - passager : acceptation et changements d'etat de son trajet
  * - centre de notifications : liste + compteur de non-lues
  */
@@ -22,25 +22,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private static final double RAYON_METRES = 4000;
-
     private final SimpMessagingTemplate messaging;
-    private final PositionConducteurRepository positions;
     private final NotificationRepository notifications;
     private final UtilisateurRepository utilisateurs;
 
-    public void notifierConducteursProches(DemandeCovoiturage demande) {
+    public void notifierTousLesConducteurs(DemandeCovoiturage demande) {
         DemandeResponse payload = DemandeResponse.from(demande);
         Long passagerId = demande.getPassager().getId();
-        for (Long conducteurId : positions.trouverConducteursProches(
-                demande.getPointRencontre().getLatitude(),
-                demande.getPointRencontre().getLongitude(),
-                RAYON_METRES)) {
-            if (conducteurId.equals(passagerId))
+
+        for (Utilisateur conducteur : utilisateurs.findByEstConducteurTrue()) {
+            Long conducteurId = conducteur.getId();
+            if (conducteurId.equals(passagerId)) {
                 continue;
+            }
+
             messaging.convertAndSendToUser(String.valueOf(conducteurId), "/queue/demandes", payload);
             creer(conducteurId, TypeNotification.DEMANDE_RECUE,
-                    "Nouvelle demande de covoiturage pres de vous", null, demande.getId());
+                    "Nouvelle demande de covoiturage disponible", null, demande.getId());
         }
     }
 

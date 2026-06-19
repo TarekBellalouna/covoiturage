@@ -10,48 +10,52 @@ import java.util.List;
 
 public interface DemandeRepository extends JpaRepository<DemandeCovoiturage, Long> {
 
-       List<DemandeCovoiturage> findByPassagerIdOrderByDateCreationDesc(Long passagerId);
+  List<DemandeCovoiturage> findByPassagerIdOrderByDateCreationDesc(Long passagerId);
 
-       List<DemandeCovoiturage> findByStatut(StatutDemande statut);
+  List<DemandeCovoiturage> findByStatut(StatutDemande statut);
 
-       long countByPassagerIdAndStatut(Long passagerId, StatutDemande statut);
+  List<DemandeCovoiturage> findByStatutAndPassagerIdNotOrderByDateCreationDesc(
+      StatutDemande statut,
+      Long passagerId);
 
-       /** Somme des places deja rattachees a un trajet (hors demandes annulees). */
-       @Query("""
-                     SELECT COALESCE(SUM(d.nombrePlacesDemandees), 0)
-                     FROM DemandeCovoiturage d
-                     WHERE d.trajet.id = :trajetId AND d.statut <> :exclu
-                     """)
-       long placesOccupees(@Param("trajetId") Long trajetId, @Param("exclu") StatutDemande exclu);
+  long countByPassagerIdAndStatut(Long passagerId, StatutDemande statut);
 
-       /** Expire en masse les demandes restees trop longtemps en attente. */
-       @Modifying
-       @Query("""
-                     UPDATE DemandeCovoiturage d
-                     SET d.statut = com.covoiturage.demande.StatutDemande.EXPIREE
-                     WHERE d.statut = com.covoiturage.demande.StatutDemande.EN_ATTENTE
-                       AND d.dateExpiration < :maintenant
-                     """)
-       int expirerDemandesDepassees(@Param("maintenant") LocalDateTime maintenant);
+  /** Somme des places deja rattachees a un trajet (hors demandes annulees). */
+  @Query("""
+      SELECT COALESCE(SUM(d.nombrePlacesDemandees), 0)
+      FROM DemandeCovoiturage d
+      WHERE d.trajet.id = :trajetId AND d.statut <> :exclu
+      """)
+  long placesOccupees(@Param("trajetId") Long trajetId, @Param("exclu") StatutDemande exclu);
 
-       /**
-        * Demandes EN_ATTENTE dont le point de rencontre est dans un rayon (metres)
-        * autour d'une position donnee. Exclut les demandes du conducteur lui-meme.
-        */
-       @Query(value = """
-                     SELECT d.*
-                     FROM demandes d
-                     JOIN points_rencontre pr ON pr.id = d.point_rencontre_id
-                     WHERE d.statut = 'EN_ATTENTE'
-                       AND d.passager_id <> :conducteurId
-                       AND ST_DWithin(
-                             ST_SetSRID(ST_MakePoint(pr.longitude, pr.latitude), 4326)::geography,
-                             ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
-                             :rayonMetres)
-                     ORDER BY d.date_creation DESC
-                     """, nativeQuery = true)
-       List<DemandeCovoiturage> trouverDemandesProches(@Param("conducteurId") Long conducteurId,
-                     @Param("lat") double lat,
-                     @Param("lng") double lng,
-                     @Param("rayonMetres") double rayonMetres);
+  /** Expire en masse les demandes restees trop longtemps en attente. */
+  @Modifying
+  @Query("""
+      UPDATE DemandeCovoiturage d
+      SET d.statut = com.covoiturage.demande.StatutDemande.EXPIREE
+      WHERE d.statut = com.covoiturage.demande.StatutDemande.EN_ATTENTE
+        AND d.dateExpiration < :maintenant
+      """)
+  int expirerDemandesDepassees(@Param("maintenant") LocalDateTime maintenant);
+
+  /**
+   * Ancienne requete avec rayon. Gardee si vous voulez reactiver le filtre plus
+   * tard.
+   */
+  @Query(value = """
+      SELECT d.*
+      FROM demandes d
+      JOIN points_rencontre pr ON pr.id = d.point_rencontre_id
+      WHERE d.statut = 'EN_ATTENTE'
+        AND d.passager_id <> :conducteurId
+        AND ST_DWithin(
+              ST_SetSRID(ST_MakePoint(pr.longitude, pr.latitude), 4326)::geography,
+              ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography,
+              :rayonMetres)
+      ORDER BY d.date_creation DESC
+      """, nativeQuery = true)
+  List<DemandeCovoiturage> trouverDemandesProches(@Param("conducteurId") Long conducteurId,
+      @Param("lat") double lat,
+      @Param("lng") double lng,
+      @Param("rayonMetres") double rayonMetres);
 }
