@@ -7,7 +7,7 @@ export default function DestinationAutocomplete({ value, onSelect }) {
 
   const chercher = (q) => {
     setTexte(q);
-    onSelect(null); // tant qu'on n'a pas cliqué dans la liste : pas de coordonnées
+    onSelect(null); 
     if (timer.current) clearTimeout(timer.current);
     if (q.trim().length < 3) return setSuggestions([]);
     timer.current = setTimeout(async () => {
@@ -24,7 +24,7 @@ export default function DestinationAutocomplete({ value, onSelect }) {
   };
 
   const choisir = (f) => {
-    const [lng, lat] = f.geometry.coordinates; // l'API renvoie [lon, lat]
+    const [lng, lat] = f.geometry.coordinates; 
     setTexte(f.properties.label);
     setSuggestions([]);
     onSelect({ label: f.properties.label, lat, lng });

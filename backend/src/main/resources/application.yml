@@ -9,27 +9,19 @@ spring:
 
   jpa:
     hibernate:
-      # 'update' est pratique en developpement ; on passera a 'validate'
-      # + migrations (Flyway) quand le schema sera stabilise.
       ddl-auto: update
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
 
-# Note : sous Spring Boot 4 (Jackson 3), les dates sont serialisees en ISO-8601
-# par defaut. Aucune configuration Jackson n'est necessaire pour cela.
 
 server:
   port: 8080
 
-# Parametres applicatifs (lus via @Value)
 app:
   jwt:
-    # En production, surcharger via la variable d'environnement JWT_SECRET.
-    # La cle doit faire au moins 256 bits (32 caracteres) pour HS256.
     secret: ${JWT_SECRET:dev-secret-a-remplacer-32-caracteres-minimum-svp}
     expiration-ms: 86400000   # 24 heures
   cors:
-    # URL du serveur de dev React (Vite). Plusieurs origines separees par des virgules.
     allowed-origins: http://10.11.31.98:5173

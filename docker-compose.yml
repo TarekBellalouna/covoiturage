@@ -42,7 +42,7 @@ services:
     ports:
       - "5173:80"
 
-  # Optionnel : interface web pour inspecter la base (http://localhost:8081)
+  # interface web pour inspecter la base (http://localhost:8081)
   adminer:
     image: adminer:latest
     container_name: covoiturage-adminer

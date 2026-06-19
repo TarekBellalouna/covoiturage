@@ -47,8 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (JwtException | IllegalArgumentException e) {
-                // Token invalide ou expire : on laisse passer sans authentification,
-                // la chaine de securite renverra 401 sur les routes protegees.
                 SecurityContextHolder.clearContext();
             }
         }

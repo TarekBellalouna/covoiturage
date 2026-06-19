@@ -45,7 +45,6 @@ export default function DriverDashboard() {
       .catch(() => {});
   }, []);
 
-  // Reception temps reel des demandes disponibles (jamais les siennes).
   useEffect(() => {
     if (!connected || !disponible) return;
     const unsub = subscribe('/user/queue/demandes', (d) => {
@@ -55,7 +54,6 @@ export default function DriverDashboard() {
     return unsub;
   }, [connected, disponible, subscribe, user]);
 
-  // Rafraichit la liste quand le conducteur est en ligne, sans geolocalisation.
   useEffect(() => {
     if (!disponible) return;
     chargerDemandes().catch(() => {});
@@ -72,7 +70,6 @@ export default function DriverDashboard() {
       setDemandes([]); // hors ligne : plus de demandes
       return;
     }
-    // En ligne : on charge toutes les demandes en attente, sans filtre de distance.
     try {
       await chargerDemandes();
     } catch {
@@ -105,7 +102,6 @@ export default function DriverDashboard() {
     if (!trajet) return;
     try {
       const { data } = await api.post(`/api/trajets/${trajet.id}/${action}`);
-      // A la fin du trajet : on ouvre directement la notation des passagers.
       if (action === 'terminer') {
         try {
           const { data: det } = await api.get(`/api/trajets/${trajet.id}/details`);

@@ -4,7 +4,6 @@ import { useAuth } from '../auth/AuthContext.jsx';
 import api from '../api/client.js';
 import Avatar from '../components/Avatar.jsx';
 
-// Redimensionne une image cote client et renvoie une data URL JPEG compacte.
 function lireImage(file, max = 400) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

@@ -38,7 +38,6 @@ public class StompAuthChannelInterceptor implements ChannelInterceptor {
                             userId, null, List.of(new SimpleGrantedAuthority("ROLE_USER")));
                     accessor.setUser(principal);
                 } catch (JwtException | IllegalArgumentException ignored) {
-                    // Connexion non authentifiee : on laisse passer sans principal.
                 }
             }
         }

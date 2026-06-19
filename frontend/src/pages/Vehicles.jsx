@@ -26,7 +26,7 @@ export default function Vehicles() {
       await api.post('/api/vehicules', form);
       setForm(VIDE);
       await charger();
-      await refreshUser(); // le 1er vehicule active le role conducteur
+      await refreshUser(); 
     } catch {
       setErreur('Ajout impossible');
     }

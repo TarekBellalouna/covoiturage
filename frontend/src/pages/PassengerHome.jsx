@@ -8,7 +8,6 @@ import RatingModal from '../components/RatingModal.jsx';
 import Avatar from '../components/Avatar.jsx';
 import DestinationAutocomplete from '../components/DestinationAutocomplete.jsx';
 
-// Couleur d'un marqueur selon l'etat.
 function couleur(statut) {
   switch (statut) {
     case 'EN_ATTENTE':
@@ -95,7 +94,6 @@ export default function PassengerHome() {
     return () => clearInterval(id);
   }, [chargerCarte]);
 
-  // Suivi temps reel de la demande active.
   useEffect(() => {
     if (!connected || !demandeActive) return;
     const unsub = subscribe('/user/queue/suivi', (maj) => {

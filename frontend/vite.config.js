@@ -8,7 +8,6 @@ export default defineConfig({
     host: true,
     watch: { usePolling: true },
   },
-  // sockjs-client reference la variable globale "global" : on la fournit.
   define: {
     global: 'globalThis',
   },

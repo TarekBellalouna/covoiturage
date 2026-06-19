@@ -28,7 +28,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DemandeService {
 
-    /** Duree de validite d'une demande avant expiration automatique. */
     private static final long EXPIRATION_MINUTES = 5;
 
     private final DemandeRepository demandes;
@@ -56,7 +55,6 @@ public class DemandeService {
         d.setDateExpiration(LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES));
         demandes.save(d);
 
-        // Push temps reel vers tous les conducteurs, sans filtre de distance.
         notifications.notifierTousLesConducteurs(d);
 
         return DemandeResponse.from(d);
@@ -94,12 +92,7 @@ public class DemandeService {
         d.setStatut(StatutDemande.ANNULEE);
     }
 
-    /**
-     * Acceptation par un conducteur. Cree un trajet OUVERT (ou rattache a un trajet
-     * existant pour le covoiturage partage), puis valide la transition EN_ATTENTE
-     * ->
-     * ACCEPTEE de maniere atomique grace au verrou optimiste (@Version).
-     */
+
     @Transactional
     public DemandeResponse accepter(Long conducteurId, Long demandeId, AccepterRequest req) {
         DemandeCovoiturage d = charger(demandeId);
@@ -157,7 +150,6 @@ public class DemandeService {
         return trajets.save(nouveau);
     }
 
-    /** Tache planifiee : expire les demandes restees trop longtemps en attente. */
     @Scheduled(fixedRate = 60_000)
     @Transactional
     public void expirerDemandes() {

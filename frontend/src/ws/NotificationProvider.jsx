@@ -31,7 +31,6 @@ export function NotificationProvider({ children }) {
     charger();
   }, [user, charger]);
 
-  // Reception temps reel des notifications.
   useEffect(() => {
     if (!connected) return;
     const unsub = subscribe('/user/queue/notifications', (n) => {

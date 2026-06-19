@@ -35,7 +35,6 @@ public class EvaluationService {
         TypeEvaluation type;
 
         if (auteurEstConducteur) {
-            // Le conducteur note un passager precis du trajet.
             if (req.cibleId() == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Indiquez le passager a noter (cibleId)");
             }
@@ -45,7 +44,6 @@ public class EvaluationService {
             cibleId = req.cibleId();
             type = TypeEvaluation.CONDUCTEUR_VERS_PASSAGER;
         } else {
-            // Un passager note le conducteur.
             if (!estPassagerDuTrajet(trajet, auteurId)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Vous n'avez pas participe a ce trajet");
             }

@@ -33,7 +33,6 @@ export function StompProvider({ children }) {
     };
   }, [token]);
 
-  // Renvoie une fonction de desabonnement. A appeler dans un effet qui depend de `connected`.
   const subscribe = useCallback((destination, handler) => {
     const client = clientRef.current;
     if (!client || !client.connected) return () => {};
