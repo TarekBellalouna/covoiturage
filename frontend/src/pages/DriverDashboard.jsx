@@ -23,7 +23,9 @@ export default function DriverDashboard() {
   const [trajetRoutes, setTrajetRoutes] = useState([]);
   const [demandeAAccepter, setDemandeAAccepter] = useState(null);
   const [prix, setPrix] = useState('');
-  const [fileNotes, setFileNotes] = useState([]); // passagers a noter apres la fin du trajet
+  const [fileNotes, setFileNotes] = useState([]);
+  const [maPosition, setMaPosition] = useState(null);
+
   const posRef = useRef(FALLBACK);
 
   useEffect(() => {
@@ -78,6 +80,19 @@ export default function DriverDashboard() {
     const id = setInterval(envoyer, 12000);
     return () => clearInterval(id);
   }, [disponible]);
+
+  // Centre la carte sur la position du conducteur dès l'ouverture.
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        const coords = { latitude: p.coords.latitude, longitude: p.coords.longitude };
+        posRef.current = coords;
+        setMaPosition([coords.latitude, coords.longitude]);
+      },
+      () => {}
+    );
+  }, []);
 
   const basculerDisponibilite = async () => {
     const prochain = !disponible;

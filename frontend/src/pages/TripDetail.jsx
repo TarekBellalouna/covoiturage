@@ -66,13 +66,18 @@ export default function TripDetail() {
 
   const estConducteur = user && trajet.conducteur.id === user.id;
   const termine = trajet.statut === 'TERMINE';
+  const evaluationsVisibles = trajet.evaluations.filter((e) =>
+    estConducteur ? e.type === 'CONDUCTEUR_VERS_PASSAGER' : e.type === 'PASSAGER_VERS_CONDUCTEUR'
+  );
 
   return (
     <div className="page-center">
       <div className="card">
         <div className="row-between">
           <h2 style={{ margin: 0 }}>Détail du trajet</h2>
-          <span className={`badge badge-${trajet.statut}`}>{LABELS[trajet.statut] || trajet.statut}</span>
+          <span className={`badge badge-${trajet.statut}`}>
+            {LABELS[trajet.statut] || trajet.statut}
+          </span>
         </div>
         <p className="muted" style={{ marginTop: 4 }}>
           Départ : {trajet.pointDepart.nom}
@@ -87,11 +92,6 @@ export default function TripDetail() {
           </Link>
           <span className="muted">{trajet.conducteur.telephone || '—'}</span>
         </div>
-        {!estConducteur && termine && (
-          <button className="btn btn-primary" onClick={() => setANoter({ cibleId: null, titre: 'Noter le conducteur' })}>
-            Noter le conducteur
-          </button>
-        )}
       </div>
 
       <div className="card" style={{ marginTop: 16 }}>
@@ -118,22 +118,16 @@ export default function TripDetail() {
               </Link>{' '}
               → {p.destinationTexte} ({p.nombrePlaces} place(s))
             </span>
-            {estConducteur && termine && (
-              <button
-                className="link"
-                onClick={() => setANoter({ cibleId: p.id, titre: `Noter ${p.prenom}` })}
-              >
-                Noter
-              </button>
-            )}
           </div>
         ))}
       </div>
 
       <div className="card" style={{ marginTop: 16 }}>
         <h3 className="detail-h3">Évaluations</h3>
-        {trajet.evaluations.length === 0 && <p className="muted">Aucune évaluation pour l’instant.</p>}
-        {trajet.evaluations.map((e, i) => (
+        {evaluationsVisibles.length === 0 && (
+          <p className="muted">Aucune évaluation pour l’instant.</p>
+        )}
+        {evaluationsVisibles.map((e, i) => (
           <div key={i} className="eval-item">
             <div className="row-between">
               <strong>
@@ -141,22 +135,14 @@ export default function TripDetail() {
               </strong>
               <Etoiles note={e.note} />
             </div>
-            {e.commentaire && <p className="muted" style={{ margin: '4px 0 0' }}>{e.commentaire}</p>}
+            {e.commentaire && (
+              <p className="muted" style={{ margin: '4px 0 0' }}>
+                {e.commentaire}
+              </p>
+            )}
           </div>
         ))}
       </div>
-
-      {aNoter && (
-        <RatingModal
-          trajetId={trajet.id}
-          titre={aNoter.titre}
-          cibleId={aNoter.cibleId}
-          onClose={() => {
-            setANoter(null);
-            charger();
-          }}
-        />
-      )}
     </div>
   );
 }

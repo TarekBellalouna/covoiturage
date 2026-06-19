@@ -37,8 +37,8 @@ function Recenter({ center }) {
 }
 
 export default function MapView({
-  center = [36.7538, 3.0588],
-  zoom = 12,
+  center = [49.258329, 4.031696],
+  zoom = 10,
   markers = [],
   route,
   routes = [],
