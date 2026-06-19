@@ -21,7 +21,7 @@ services:
     ports:
       - "8081:8080"          # interface web sur http://localhost:8081
     environment:
-      ADMINER_DEFAULT_SERVER: db   # pre-remplit le champ "Serveur" avec le nom du service db
+      ADMINER_DEFAULT_SERVER: db   
 
 volumes:
   covoiturage-pgdata:
