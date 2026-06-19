@@ -19,7 +19,7 @@ npm install
 npm run dev          # http://localhost:5173
 ```
 
-Le backend doit tourner sur `http://localhost:8080`.
+Le backend doit tourner sur `http://localhost:8090`.
 Pour pointer ailleurs, définir `VITE_API_URL` dans un fichier `.env`.
 
 ## Structure

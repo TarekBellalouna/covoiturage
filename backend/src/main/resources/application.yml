@@ -3,7 +3,7 @@ spring:
     name: covoiturage
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/covoiturage
+    url: jdbc:postgresql://10.11.31.98:5432/covoiturage
     username: covoiturage
     password: covoiturage
 
@@ -32,4 +32,4 @@ app:
     expiration-ms: 86400000   # 24 heures
   cors:
     # URL du serveur de dev React (Vite). Plusieurs origines separees par des virgules.
-    allowed-origins: http://localhost:5173
+    allowed-origins: http://10.11.31.98:5173

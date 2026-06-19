@@ -15,7 +15,7 @@ export function StompProvider({ children }) {
       setConnected(false);
       return;
     }
-    const base = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const base = import.meta.env.VITE_API_URL || 'http://10.11.31.98:8090';
     const client = new Client({
       webSocketFactory: () => new SockJS(`${base}/ws`),
       connectHeaders: { Authorization: `Bearer ${token}` },
