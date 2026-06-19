@@ -1,0 +1,712 @@
+:root {
+  --accent: #0f6e56;
+  --accent-dark: #085041;
+  --accent-light: #e1f5ee;
+  --accent-border: #5dcaa5;
+  --bg: #f4f3ee;
+  --surface: #ffffff;
+  --text: #2c2c2a;
+  --muted: #6b6a64;
+  --border: #e3e1d8;
+  --danger: #a32d2d;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2 {
+  font-weight: 500;
+}
+
+a {
+  color: var(--accent);
+}
+
+.center {
+  text-align: center;
+}
+.muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+.error {
+  color: var(--danger);
+  font-size: 14px;
+  margin: 10px 0;
+}
+.label {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin: 14px 0 6px;
+}
+
+/* Form elements */
+.field {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 15px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+}
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.btn {
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
+  font-family: inherit;
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.btn-primary {
+  background: var(--accent-dark);
+  color: var(--accent-light);
+  border: none;
+  width: 100%;
+}
+.btn-danger {
+  color: var(--danger);
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+}
+.chip {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+}
+.chip-active {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  border-color: var(--accent-border);
+}
+
+/* Auth (centered card) */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 32px;
+  border: 1px solid var(--border);
+}
+.auth-card .btn-primary {
+  margin-top: 18px;
+}
+.brand {
+  color: var(--accent);
+  margin: 0 0 4px;
+}
+
+/* Desktop shell */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  height: 60px;
+  padding: 0 28px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 1000;
+}
+.logo {
+  font-weight: 500;
+  color: var(--accent);
+  font-size: 18px;
+}
+.topbar-nav {
+  display: flex;
+  gap: 24px;
+  flex: 1;
+}
+.topbar-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 15px;
+}
+.topbar-nav a.active {
+  color: var(--accent);
+  font-weight: 500;
+}
+.topbar-user {
+  text-decoration: none;
+}
+.avatar-sm {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 13px;
+}
+.app-content {
+  height: calc(100vh - 61px);
+  overflow: auto;
+}
+
+/* Split layout (sidebar + map) */
+.split {
+  display: flex;
+  height: 100%;
+}
+.sidebar {
+  width: 400px;
+  padding: 28px;
+  border-right: 1px solid var(--border);
+  overflow: auto;
+}
+.sidebar h2 {
+  font-size: 20px;
+  margin: 0 0 16px;
+}
+.map-area {
+  flex: 1;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.autocomplete { position: relative; }
+.suggestions {
+  position: absolute; z-index: 1100; left: 0; right: 0;
+  margin: 4px 0 0; padding: 0; list-style: none;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; box-shadow: 0 6px 20px rgba(0,0,0,.12); overflow: hidden;
+}
+.suggestions li { padding: 10px 12px; cursor: pointer; font-size: 14px; }
+.suggestions li:hover { background: var(--bg); }
+
+/* Centered pages (profile, history) */
+.page-center {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+}
+.card h2 {
+  font-size: 20px;
+  margin: 0 0 12px;
+}
+
+/* Shared bits */
+.status-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+/* === Composants additionnels (front complet) === */
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+textarea.field {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.link,
+.link-danger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 0;
+}
+.link {
+  color: var(--accent);
+}
+.link-danger {
+  color: var(--danger);
+}
+
+/* Badges de statut */
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: #eceae3;
+  color: #5f5e5a;
+}
+.badge-EN_ATTENTE,
+.badge-OUVERT {
+  background: #faeeda;
+  color: #854f0b;
+}
+.badge-ACCEPTEE,
+.badge-EN_COURS {
+  background: var(--accent-light);
+  color: var(--accent-dark);
+}
+.badge-TERMINEE,
+.badge-TERMINE {
+  background: #eaf3de;
+  color: #3b6d11;
+}
+.badge-EXPIREE,
+.badge-ANNULEE,
+.badge-ANNULE {
+  background: #fcebeb;
+  color: #a32d2d;
+}
+
+/* Interrupteur de disponibilite */
+.toggle {
+  width: 46px;
+  height: 26px;
+  border-radius: 20px;
+  border: none;
+  background: #d3d1c7;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+}
+.toggle-on {
+  background: var(--accent);
+}
+.toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: left 0.15s ease;
+}
+.toggle-on .toggle-knob {
+  left: 23px;
+}
+
+/* Carte de demande entrante */
+.demande-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+/* Modal de notation */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 5000;
+}
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 380px;
+}
+.stars {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+.star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 30px;
+  line-height: 1;
+  color: var(--border);
+  padding: 0;
+}
+.star-on {
+  color: #ef9f27;
+}
+
+/* === Profils, notifications, détail (nouvelles fonctionnalités) === */
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Cloche de notifications */
+.bell-wrap {
+  position: relative;
+}
+.bell {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 6px;
+  display: flex;
+  border-radius: 8px;
+}
+.bell:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+.bell-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Dropdown */
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+.dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  width: 320px;
+  max-height: 420px;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  z-index: 41;
+}
+.dropdown-head {
+  padding: 12px 16px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown-empty {
+  padding: 20px 16px;
+  text-align: center;
+}
+.notif-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.notif-item:hover {
+  background: var(--bg);
+}
+.notif-unread {
+  background: var(--accent-light);
+}
+.notif-unread:hover {
+  background: #d4efe4;
+}
+.notif-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+.notif-msg {
+  font-size: 13px;
+  color: var(--muted);
+}
+.notif-time {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Lignes cliquables (historique) */
+.row-clickable {
+  cursor: pointer;
+}
+.row-clickable:hover {
+  background: var(--bg);
+  margin: 0 -12px;
+  padding-left: 12px;
+  padding-right: 12px;
+  border-radius: 8px;
+}
+
+/* Modal de profil */
+.modal-profil-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+/* Page détail */
+.detail-h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.eval-item {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.stars-read {
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.stars-read .star-on {
+  color: #ef9f27;
+}
+.stars-read .star-off {
+  color: var(--border);
+}
+
+/* === Avatar (photo ou initiales) === */
+.avatar-img {
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+.avatar-circle {
+  border-radius: 50%;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+/* === Accueil (tableau de bord 50/50) === */
+.home {
+  display: flex;
+  height: 100%;
+}
+.home-panel {
+  flex: 1;
+  padding: 28px;
+  overflow: auto;
+}
+.home-map {
+  flex: 1;
+  position: relative;
+}
+.home-greeting {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 18px 0;
+}
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+}
+.stat-num {
+  display: block;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+.stat-lbl {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.live-card {
+  border-left: 3px solid var(--accent);
+  margin-bottom: 16px;
+}
+
+/* Legende de la carte */
+.map-legend {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  z-index: 1000;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+.map-legend span {
+  display: flex;
+  align-items: center;
+}
+.map-legend i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+/* === Page Trajets (deux colonnes) === */
+.page-wide {
+  max-width: 1040px;
+}
+.history-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+/* === Edition de la photo de profil === */
+.photo-edit {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 860px) {
+  .home {
+    flex-direction: column;
+  }
+  .home-map {
+    min-height: 320px;
+  }
+  .history-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* En-tete passager (photo + numero) dans la carte de demande */
+.passager-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+}
+.passager-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.passager-nom {
+  font-weight: 500;
+  color: var(--accent);
+}

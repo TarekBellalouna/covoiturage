@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: covoiturage-db
+    environment:
+      POSTGRES_DB: covoiturage
+      POSTGRES_USER: covoiturage
+      POSTGRES_PASSWORD: covoiturage
+    ports:
+      - "5432:5432"
+    volumes:
+      - covoiturage-pgdata:/var/lib/postgresql/data
+      - ./init-postgis.sql:/docker-entrypoint-initdb.d/init-postgis.sql:ro
+
+  adminer:
+    image: adminer:latest
+    container_name: covoiturage-adminer
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8081:8080"          # interface web sur http://localhost:8081
+    environment:
+      ADMINER_DEFAULT_SERVER: db   # pre-remplit le champ "Serveur" avec le nom du service db
+
+volumes:
+  covoiturage-pgdata:
